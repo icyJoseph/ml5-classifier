@@ -33,7 +33,13 @@ const getPhoto = ({ id }) => {
 
 const classifyPhoto = ({ photo, classification }) => {
   const filePath = `classified/${photo.id}.json`;
-  return asyncWrite(filePath, { ...photo, classification });
+  return asyncWrite(filePath, {
+    ...photo,
+    classification: {
+      ...classification,
+      classification_date: new Date().toUTCString()
+    }
+  });
 };
 
 const getClassified = async () => {
