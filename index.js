@@ -6,7 +6,13 @@ const bodyParser = require("body-parser");
 const fetch = require("node-fetch");
 
 const { selectFromResults } = require("./utils");
-const { searchPhotos, classifyPhoto, getClassified } = require("./api");
+const {
+  searchPhotos,
+  classifyPhoto,
+  getClassified,
+  updatePhoto,
+  getUserProfile
+} = require("./api");
 
 const port = process.env.PORT || 9999;
 
@@ -17,10 +23,10 @@ globalThis.fetch = fetch;
 app.use(cors());
 app.use(bodyParser.json());
 
-app.post("/search", async (req, res) => {
+app.get("/search", async (req, res) => {
   try {
-    const { body } = req;
-    const { search } = body;
+    const { query } = req;
+    const { search } = query;
 
     if (!search) {
       throw new Error("Empty search string");
@@ -61,6 +67,31 @@ app.get("/classified", async (_, res) => {
     return res.send(data);
   } catch (e) {
     console.log("classified", e);
+    return res.status(500).send({ message: "Something went wrong..." });
+  }
+});
+
+app.post("/updatePhoto", async (req, res) => {
+  try {
+    const { body } = req;
+    const { photo } = body;
+
+    const updated = await updatePhoto(photo);
+    return res.send(updated);
+  } catch (e) {
+    console.log("updatePhoto", e);
+    return res.status(500).send({ message: "Something went wrong..." });
+  }
+});
+
+app.get("/user", async (req, res) => {
+  try {
+    const { query } = req;
+    const { username } = query;
+    const user = await getUserProfile({ username });
+    return res.send(user);
+  } catch (e) {
+    console.log("user", e);
     return res.status(500).send({ message: "Something went wrong..." });
   }
 });

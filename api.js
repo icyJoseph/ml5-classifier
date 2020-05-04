@@ -1,5 +1,10 @@
 const Unsplash = require("unsplash-js").default;
-const { asyncRead, asyncWrite, asyncReadDir } = require("./utils");
+const {
+  asyncRead,
+  asyncWrite,
+  asyncReadDir,
+  selectFromResults
+} = require("./utils");
 
 const unsplash = new Unsplash({
   accessKey: process.env.UNSPLASH_API_KEY,
@@ -16,6 +21,14 @@ const searchPhotos = ({ search }) => {
       .then((res) => res.json())
       .then((res) => asyncWrite(filePath, res))
   );
+};
+
+const getUserProfile = ({ username }) => {
+  return unsplash.users.profile(username).then((res) => res.json());
+};
+
+const getPhoto = ({ id }) => {
+  return unsplash.photos.getPhoto(id).then((res) => res.json());
 };
 
 const classifyPhoto = ({ photo, classification }) => {
@@ -35,8 +48,21 @@ const getClassified = async () => {
   return classified;
 };
 
+const updatePhoto = async (photo) => {
+  try {
+    const stale = await asyncRead(`classified/${photo.id}`);
+    const fresh = await getPhoto(photo);
+    const updated = { ...stale, ...selectFromResults(fresh) };
+    return asyncWrite(`classified/${photo.id}`, updated);
+  } catch (e) {
+    return {};
+  }
+};
+
 module.exports = {
   searchPhotos,
   classifyPhoto,
-  getClassified
+  getClassified,
+  updatePhoto,
+  getUserProfile
 };
