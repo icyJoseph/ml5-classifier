@@ -25,8 +25,8 @@ app.use(bodyParser.json());
 
 const sleep = (time) => new Promise((accept) => setTimeout(accept, time));
 
-app.use(async (_, __, next) => {
-  await sleep(2000);
+app.use(async (req, res, next) => {
+  await sleep(1000);
   next();
 });
 
