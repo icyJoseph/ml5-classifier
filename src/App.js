@@ -6,13 +6,19 @@ import { Box } from "components/Box";
 import { Card } from "components/Card";
 import { Container } from "components/Container";
 import { Flex } from "components/Flex";
-import { Fieldset } from "components/Input";
+import { Fieldset, Form } from "components/Input";
 import { Sidebar } from "components/Sidebar";
 import { Preview } from "components/Preview";
+import { Title } from "components/Title";
 import { useThemeMode } from "providers/ThemeProvider";
 import { classifier } from "utils";
-
-const baseUrl = process.env.REACT_APP_BACKEND_URL;
+import {
+  fetchUser,
+  searchPhotos,
+  classifyPhoto,
+  fetchClassifiedPhotos
+} from "api/backend";
+import { Fab } from "components/Fab";
 
 const UserInfo = ({ user, onUserDataClick }) => (
   <>
@@ -21,51 +27,73 @@ const UserInfo = ({ user, onUserDataClick }) => (
   </>
 );
 
-const Image = ({ url, alt, caption, clickHandler, children }) => {
+const HamburgerMenu = () => (
+  <span role="img" aria-label="sidebar-open">
+    🍔
+  </span>
+);
+
+const Image = (
+  {
+    url,
+    alt,
+    caption = "Search Images from Splash",
+    clickHandler,
+    children
+  } = {
+    caption: null
+  }
+) => {
   const [img, setImg] = React.useState(null);
 
   React.useEffect(() => {
-    const controller = new AbortController();
-    const signal = controller.signal;
+    if (url) {
+      const controller = new AbortController();
+      const signal = controller.signal;
 
-    fetch(url, { signal })
-      .then((response) => {
-        if (response.status >= 200 && response.status < 300) {
-          return response;
-        }
-        throw new Error("Invalid Image Response");
-      })
-      .then((response) => response.blob())
-      .then((data) => {
-        const objectURL = URL.createObjectURL(data);
-        return objectURL;
-      })
-      .then((res) => setTimeout(() => setImg(res), 2000))
-      .catch(() => {
-        if (!signal.aborted) {
-          console.warn("Aborted Image Request");
-        }
-      });
+      fetch(url, { signal })
+        .then((response) => {
+          if (response.status >= 200 && response.status < 300) {
+            return response;
+          }
+          throw new Error("Invalid Image Response");
+        })
+        .then((response) => response.blob())
+        .then((data) => {
+          const objectURL = URL.createObjectURL(data);
+          return objectURL;
+        })
+        .then((res) => setTimeout(() => setImg(res), 2000))
+        .catch(() => {
+          if (!signal.aborted) {
+            console.warn("Aborted Image Request");
+          }
+        });
 
-    return () => controller.abort();
+      return () => controller.abort();
+    }
   }, [url]);
 
   return (
     <Card>
       <Card.Figure>
-        <Card.FigCaption top={0}>{caption}</Card.FigCaption>
+        <Card.FigCaption top={0}>
+          {caption ?? "No caption available"}
+        </Card.FigCaption>
         <Card.Overlay>
           <img src={Empty} alt="Loading..." />
         </Card.Overlay>
         {img && (
-          <Card.Image
-            src={img}
-            className="image"
-            alt={alt}
-            onClick={(e) => classifier.classify(e.target).then(clickHandler)}
-          />
+          <>
+            <Card.Image
+              src={img}
+              className="image"
+              alt={alt}
+              onClick={(e) => classifier.classify(e.target).then(clickHandler)}
+            />
+            <Card.FigCaption bottom={0}>{children}</Card.FigCaption>
+          </>
         )}
-        <Card.FigCaption bottom={0}>{children}</Card.FigCaption>
       </Card.Figure>
     </Card>
   );
@@ -77,63 +105,33 @@ function Root({ sidebarDocked, toggleSideBar }) {
 
   const inputRef = React.useRef();
 
-  React.useEffect(() => {
-    fetch(`${baseUrl}/search?search=dogs`)
-      .then(async (res) => {
-        if (res.status !== 200) {
-          const err = await res.json();
-          throw err;
-        }
-        return res;
-      })
-      .then((res) => res.json())
-      .then(({ results }) => setList(results))
-      .catch((err) => {
-        return setErr(err);
-      });
-  }, []);
-
   if (err) return <span>{err.message}</span>;
-  if (!list.length) return null;
-
-  const [{ url, alt, caption, ...rest }] = list;
 
   const saveClassification = (results) => {
-    const photo = { url, alt, caption, ...rest };
+    const [photo] = list;
 
-    return fetch(`${baseUrl}/classify`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        photo,
-        classification: {
-          results,
-          validation: "good"
-        }
-      })
-    }).then(() => fetch(`${baseUrl}/classified`).then((res) => res.json()));
+    if (photo) {
+      return classifyPhoto({ photo, results });
+    }
   };
 
-  const fetchUserData = (username) =>
-    fetch(`${baseUrl}/user?username=${username}`)
-      .then((res) => res.json())
-      .then(console.log);
+  const fetchUserData = (username) => fetchUser({ username }).then(console.log);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const search = inputRef.current.value;
-    fetch(`${baseUrl}/search?search=${search}`)
-      .then((res) => res.json())
-      .then(({ results }) => setList(results));
+    return searchPhotos({ search })
+      .then(({ results }) => setList(results))
+      .catch(() => setErr({ message: `Failed to search: ${search}` }));
   };
 
   return (
     <Container>
-      <h1 style={{ margin: 0 }}>ML5 + Unsplash</h1>
-      <form onSubmit={handleSubmit}>
-        <Fieldset>
+      <Title as="h1" ml={4} mt={2} mb={1}>
+        {`ML5 + Unsplash = <3`}
+      </Title>
+      <Form onSubmit={handleSubmit}>
+        <Fieldset mt={2} mb={3} p={0}>
           <Fieldset.Input ref={inputRef} type="text" placeholder="search" />
           <Fieldset.Button type="submit">
             <span role="img" aria-label="search-button">
@@ -142,21 +140,20 @@ function Root({ sidebarDocked, toggleSideBar }) {
           </Fieldset.Button>
           <Fieldset.Legend>search</Fieldset.Legend>
         </Fieldset>
-      </form>
+      </Form>
 
-      <Image
-        url={url}
-        alt={alt}
-        caption={caption}
-        clickHandler={saveClassification}
-      >
+      <Image {...list[0]} clickHandler={saveClassification}>
         <UserInfo
-          user={rest.user}
-          onUserDataClick={() => fetchUserData(rest.user.username)}
+          user={list[0]?.user}
+          onUserDataClick={() => fetchUserData(list[0]?.user?.username)}
         />
       </Image>
 
-      {!sidebarDocked && <button onClick={toggleSideBar}>Open/Close</button>}
+      {!sidebarDocked && (
+        <Fab onClick={toggleSideBar}>
+          <HamburgerMenu />
+        </Fab>
+      )}
     </Container>
   );
 }
@@ -166,9 +163,7 @@ const SideBarContent = () => {
   const [checked, toggle] = useThemeMode();
 
   React.useEffect(() => {
-    fetch(`${baseUrl}/classified`)
-      .then((res) => res.json())
-      .then(setClassified);
+    fetchClassifiedPhotos().then(setClassified);
   }, []);
 
   return (

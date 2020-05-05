@@ -7,4 +7,6 @@ export const Preview = styled.div`
 
 Preview.Image = styled.img`
   width: 128px;
+  image-rendering: pixelated;
+  image-rendering: optimizeSpeed;
 `;

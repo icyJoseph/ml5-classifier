@@ -1,9 +1,7 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
-  display: flex;
+  display: grid;
   height: 100%;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
+  grid-template-rows: min-content min-content 1fr;
 `;

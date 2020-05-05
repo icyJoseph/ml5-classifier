@@ -1,7 +1,14 @@
 import styled from "styled-components";
 import { space } from "@styled-system/space";
 
+export const Form = styled.form`
+  justify-self: center;
+  align-self: center;
+`;
+
 export const Fieldset = styled.fieldset`
+  ${space}
+
   text-align: center;
   @media (min-width: 320px) {
     text-align: unset;
@@ -10,7 +17,7 @@ export const Fieldset = styled.fieldset`
 
 Fieldset.Legend = styled.legend`
   transition: transform 0.5s ease, opacity 0.5s ease;
-  transform: translateY(-15px);
+  transform: translateY(15px);
   opacity: 0;
 
   input:not(:placeholder-shown) ~ & {
@@ -53,7 +60,7 @@ ${space({ mt: 1, mx: 2, py: 1, px: 2 })}
   border: 1px solid ${({ theme }) => theme.primary};
   border-radius: 4px;
 
-  @media (min-width: 320px) {
+  @media (min-width: 568px) {
     ${space({ mx: 2, py: 1, px: 2 })};
   }
 `;

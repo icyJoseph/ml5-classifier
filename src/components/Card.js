@@ -7,20 +7,26 @@ const appear = keyframes`
 `;
 
 export const Card = styled.div`
+  ${space};
   background: ${({ theme }) => theme.foreground};
 
   display: flex;
   flex-direction: column;
   width: 100%;
+  height: 100%;
   min-width: unset;
   overflow-x: hidden;
+  justify-self: center;
+  align-self: center;
 
-  @media (min-width: 768px) {
+  @media (min-width: 576px) {
     border-radius: 4px;
     width: 80%;
+    height: unset;
     min-width: 512px;
     transition: box-shadow 0.7s ease;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
+
     &:hover {
       box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.4);
     }
@@ -36,10 +42,6 @@ Card.Figure = styled.figure`
   align-items: center;
   width: 100%;
   min-height: 512px;
-
-  @media (min-width: 1024px) {
-    min-width: 512px;
-  }
 `;
 
 Card.FigCaption = styled.figcaption`
@@ -68,5 +70,6 @@ Card.Overlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background: rgba(0, 0, 0, 0.4);
+  background: ${({ theme }) =>
+    theme.mode === "dark" ? "rgba(0, 0, 0, 0.4)" : "rgba(255,255,255,0.4)"};
 `;
