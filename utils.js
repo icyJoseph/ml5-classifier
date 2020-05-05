@@ -54,7 +54,7 @@ const selectFromResults = ({
   ...data,
   alt,
   caption,
-  url: `${urls.raw}fm=jpg&fit=crop&w=512&h=512&q=80&fit=max`
+  url: `${urls.raw}fm=jpg&fit=crop&w=512&h=512&q=80&fit=crop`
 });
 
 module.exports = {
