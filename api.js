@@ -8,7 +8,7 @@ const {
 
 const unsplash = new Unsplash({
   accessKey: process.env.UNSPLASH_API_KEY,
-  timeout: 500
+  // timeout: 1500
 });
 
 const searchPhotos = ({ search }) => {
