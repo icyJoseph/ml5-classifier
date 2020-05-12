@@ -6,9 +6,16 @@ const appear = keyframes`
    100% { opacity: 1; }  
 `;
 
+const pulse = keyframes`
+  0% {opacity:1;}
+  50% {opacity:0.5;}
+  100% {opacity: 1;}
+`;
+
 export const Card = styled.div`
   ${space};
   background: ${({ theme }) => theme.foreground};
+  position: relative;
 
   display: flex;
   flex-direction: column;
@@ -50,9 +57,13 @@ Card.FigCaption = styled.figcaption`
   position: absolute;
   top: ${(props) => props.top ?? "unset"};
   bottom: ${(props) => props.bottom ?? "unset"};
-  color: white;
+  color: ${(props) => props.theme.highlight};
   background: rgba(0, 0, 0, 0.7);
   z-index: 1;
+
+  > span {
+    color: white;
+  }
 `;
 
 Card.Image = styled.img`
@@ -70,6 +81,9 @@ Card.Overlay = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  background: ${({ theme }) =>
-    theme.mode === "dark" ? "rgba(0, 0, 0, 0.4)" : "rgba(255,255,255,0.4)"};
+  background: rgba(0, 0, 0, 0.4);
+
+  > img.loading {
+    animation: ${pulse} 1s forwards infinite;
+  }
 `;
