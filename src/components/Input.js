@@ -2,7 +2,8 @@ import styled from "styled-components";
 import { space } from "@styled-system/space";
 
 export const Form = styled.form`
-  justify-self: center;
+  ${space};
+  justify-self: flex-start;
   align-self: center;
 `;
 
