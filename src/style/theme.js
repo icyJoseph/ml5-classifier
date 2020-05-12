@@ -2,7 +2,7 @@ export const theme = {
   dark: {
     background: "#303633",
     foreground: "#494d4b",
-    primary: "#6fab98",
+    primary: "#0e131f",
     secondary: "#444554",
     highlight: "#87BCDE",
     mode: "dark"
