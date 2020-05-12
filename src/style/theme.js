@@ -1,18 +1,18 @@
 export const theme = {
   dark: {
-    background: "#303633", // outer space
+    background: "#303633",
     foreground: "#494d4b",
-    primary: "#8BE8CB", // magic mint
-    secondary: "#444554", // independence
-    highlight: "#87BCDE", // aero
+    primary: "#6fab98",
+    secondary: "#444554",
+    highlight: "#87BCDE",
     mode: "dark"
   },
   light: {
-    background: "#FAF3DD", // egg shell
-    foreground: "#b3b0aa",
-    primary: "#ad7fa3",
-    secondary: "#201E1F", // eerie black
-    highlight: "#82C0CC", // middle blue
+    background: "#FAF3DD",
+    foreground: "#494d4b",
+    primary: "#415a77",
+    secondary: "#201E1F",
+    highlight: "#fb7490",
     mode: "light"
   }
 };
