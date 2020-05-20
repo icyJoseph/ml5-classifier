@@ -2,7 +2,7 @@ import { h, Component } from "preact";
 import ml5 from "ml5";
 import widget from "./style.scss";
 
-export default class App extends Component {
+export default class Widget extends Component {
   state = {
     modelLoaded: false,
     results: []
