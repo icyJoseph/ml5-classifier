@@ -1,11 +1,15 @@
 import { h, Component } from "preact";
 import ml5 from "ml5";
-import widget from "./style.scss";
+import widget from "./widget.scss";
+
+import { Trigger } from "./Trigger";
+import { Window } from "./Window";
 
 export default class Widget extends Component {
   state = {
     modelLoaded: false,
-    results: []
+    results: [],
+    openWindow: false
   };
 
   classifier = null;
@@ -39,20 +43,32 @@ export default class Widget extends Component {
   }
 
   render(props, state) {
-    const { modelLoaded, results } = state;
+    const { modelLoaded, results, openWindow } = state;
     const { color } = props;
 
     return (
       <div className={widget.widget}>
-        <h1 style={{ color }}>Hello, ML5!</h1>
-        <p>Model {modelLoaded ? "loaded" : "not-loaded"}</p>
-        <ul style={{ listStyle: "none" }}>
-          {results.map(({ label, confidence }) => (
-            <li key={label}>
-              {Math.floor(confidence * 100)}% - {label}
-            </li>
-          ))}
-        </ul>
+        {openWindow && (
+          <Window>
+            <h1 style={{ color }}>Hello, ML5!</h1>
+            <p>Model {modelLoaded ? "loaded" : "not-loaded"}</p>
+            <ul style={{ listStyle: "none" }}>
+              {results.map(({ label, confidence }) => (
+                <li key={label}>
+                  {Math.floor(confidence * 100)}% - {label}
+                </li>
+              ))}
+            </ul>
+          </Window>
+        )}
+        <Trigger
+          loading={!modelLoaded}
+          toggleWindow={() =>
+            this.setState((prevState) => ({
+              openWindow: !prevState.openWindow
+            }))
+          }
+        />
       </div>
     );
   }

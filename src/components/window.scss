@@ -1,0 +1,42 @@
+.window {
+  position: relative;
+  height: 300px;
+  width: 200px;
+  max-width: 200px;
+  max-height: 300px;
+  background: papayawhip;
+  margin-bottom: 16px;
+  padding: 8px;
+}
+
+.window,
+.window::before,
+.window::after {
+  /* Styles to distinguish sheets from one another */
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.25);
+  border: 1px solid #bbb;
+}
+
+.window::before,
+.window::after {
+  content: "";
+  position: absolute;
+  height: 95%;
+  width: 99%;
+  background-color: papayawhip;
+  background-blend-mode: overlay;
+}
+
+.window::before {
+  right: 10px;
+  top: 0;
+  transform: rotate(-1deg);
+  z-index: -1;
+}
+
+.window::after {
+  top: 5px;
+  right: -5px;
+  transform: rotate(1deg);
+  z-index: -2;
+}

@@ -1,0 +1,53 @@
+@keyframes rotAm {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes scaleUp {
+  0% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(1.15);
+  }
+}
+
+@mixin base {
+  display: inline-block;
+  cursor: default;
+  font-size: inherit;
+}
+
+.trigger {
+  background: papayawhip;
+  width: 48px;
+  height: 48px;
+  font-size: 24px;
+  margin-left: auto;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.4);
+  transition: all 0.5s ease-in-out;
+}
+
+.trigger:hover {
+  box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.7);
+}
+
+.hourglass {
+  @include base;
+  animation: rotAm 1.75s ease-in-out infinite;
+}
+
+.openmenu {
+  @include base;
+  cursor: pointer;
+}
+
+.openmenu:hover {
+  animation: scaleUp 0.5s ease-in-out infinite alternate;
+}
