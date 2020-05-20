@@ -1,8 +1,16 @@
-html, body {
-	font: 14px/1.21 'Helvetica Neue', arial, sans-serif;
-	font-weight: 400;
+.widget * {
+  font: 14px/1.21 "Helvetica Neue", arial, sans-serif;
+  font-weight: 400;
 }
 
-h1 {
-	text-align: center;
+.widget h1 {
+  text-align: center;
+}
+
+.widget {
+  background: papayawhip;
+  position: absolute;
+  bottom: 32px;
+  right: 32px;
+  border-radius: 8px;
 }
