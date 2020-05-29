@@ -1,3 +1,25 @@
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(100px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+}
+
+@keyframes slideOut {
+  0% {
+    opacity: 1;
+    transform: translateY(0px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(100px);
+  }
+}
+
 .window {
   position: relative;
   height: 300px;
@@ -7,6 +29,16 @@
   background: papayawhip;
   margin-bottom: 16px;
   padding: 8px;
+  opacity: 0;
+  transform: translateY(100px);
+}
+
+.opening {
+  animation: slideIn 0.5s ease-in forwards;
+}
+
+.closing {
+  animation: slideOut 0.5s ease-in forwards;
 }
 
 .window,
