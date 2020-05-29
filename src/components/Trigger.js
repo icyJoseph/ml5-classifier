@@ -26,7 +26,13 @@ const OpenMenu = ({ onClick }) => (
 
 export function Trigger({ loading, toggleWindow }) {
   return (
-    <div className={trigger.trigger}>
+    <div
+      className={trigger.trigger}
+      tabIndex="1"
+      onKeyDown={(e) => {
+        if (e.key === "Enter") return toggleWindow();
+      }}
+    >
       {loading ? <Loading /> : <OpenMenu onClick={toggleWindow} />}
     </div>
   );
