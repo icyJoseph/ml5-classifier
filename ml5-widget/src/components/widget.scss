@@ -1,0 +1,18 @@
+.widget * {
+  font: 14px/1.21 "Helvetica Neue", arial, sans-serif;
+  font-weight: 400;
+  font-family: "Helvetica Neue", arial, sans-serif, apple color emoji,
+    sans-serif, apple color emoji, segoe ui emoji, noto color emoji,
+    android emoji, emojisymbols, emojione mozilla, twemoji mozilla,
+    segoe ui symbol;
+}
+
+.widget h1 {
+  text-align: center;
+}
+
+.widget {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+}
