@@ -1,9 +1,10 @@
 import { h, Component } from "preact";
-import ml5 from "ml5";
 import widget from "./widget.scss";
 
 import { Trigger } from "./Trigger";
 import { Window } from "./Window";
+
+import { appendScript } from "../utils/appendScript";
 
 export class Widget extends Component {
   state = {
@@ -14,15 +15,26 @@ export class Widget extends Component {
   };
 
   classifier = null;
+  cancelScriptLoader = null;
 
   componentDidMount() {
-    this.classifier = ml5.imageClassifier("Mobilenet", () =>
-      this.setState({ modelLoaded: true })
-    );
+    this.cancelScriptLoader = appendScript({
+      src: "https://unpkg.com/ml5@0.4.3/dist/ml5.min.js",
+      onError: () => console.error("Error loading ml5"),
+      onLoad: () => {
+        this.classifier = ml5.imageClassifier("Mobilenet", () =>
+          this.setState({ modelLoaded: true })
+        );
+      }
+    });
+
     window.addEventListener("click", this.classify.bind(this));
   }
 
   componentWillUnmount() {
+    if (this.cancelScriptLoader) {
+      this.cancelScriptLoader();
+    }
     window.removeEventListener("click", this.classify.bind(this));
   }
 
@@ -60,15 +72,18 @@ export class Widget extends Component {
 
   render(props, state) {
     const { modelLoaded, results, openWindow, nextWindow } = state;
-    const { color = "hotpink" } = props;
+    const { color, background } = props;
 
     return (
-      <div className={widget.widget}>
+      <div
+        className={widget.widget}
+        style={{ "--background": background, "--color": color }}
+      >
         {openWindow && (
           <Window openWindow={openWindow} nextWindowState={nextWindow}>
-            <h1 style={{ color }}>Hello, ML5!</h1>
+            <h1>Hello, ML5!</h1>
             <p>Model {modelLoaded ? "loaded" : "not-loaded"}</p>
-            <ul style={{ listStyle: "none" }}>
+            <ul>
               {results.map(({ label, confidence }) => (
                 <li key={label}>
                   {Math.floor(confidence * 100)}% - {label}
