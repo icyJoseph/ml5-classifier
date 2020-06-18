@@ -12,7 +12,15 @@
 }
 
 .widget {
+  --background: papayawhip;
+  --color: hotpink;
   position: fixed;
   bottom: 32px;
   right: 32px;
+}
+
+.widget ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
