@@ -28,7 +28,6 @@
     "sass-loader": "^6.0.6"
   },
   "dependencies": {
-    "ml5": "^0.5.0",
     "preact": "^10.4.4",
     "preact-habitat": "^3.1.0",
     "preact-render-to-string": "^4.1.0"
