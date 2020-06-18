@@ -126,9 +126,15 @@
       />
     </div>
 
-    <script type="text/props">
-      { "color": "hotpink"}
-    </script>
-    <script async src="/bundle.js"></script>
+    <div class="widget">
+      <script type="text/props">
+        {
+          "background": "black",
+          "color": "white",
+          "endpoint": "http://localhost:9999"
+        }
+      </script>
+    </div>
+    <script async src="/bundle.js" data-mount-in=".widget"></script>
   </body>
 </html>
