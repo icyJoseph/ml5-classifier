@@ -49,7 +49,6 @@ export class Widget extends Component {
     imgEl.onload = () => {
       return this.classifier.classify(imgEl, (err, results) => {
         if (err) return console.log(err);
-        console.log(results);
         return this.setState({ results });
       });
     };
